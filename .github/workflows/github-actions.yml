@@ -3,16 +3,17 @@ on:
   pull_request:
     types: [ 'opened' ]
 jobs:
-  merge-develop-to-main:
+  label_pull_request:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
-
-      - run: echo "✅ Starting process add label"
-      - name: add label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ startsWith(github.event.comment.body, '/add-labels') }}
+      - uses: actions/github-script@v6
         with:
-          labels: bug
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          script: |
+            github.rest.pullRequest.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ["triage"]
+            })
