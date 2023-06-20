@@ -15,5 +15,5 @@ jobs:
           username: ${{ secrets.AWX_USER }}
           password: ${{ secrets.AWX_PASSWORD }}
           customHeaders: '{"Content-Type": "application/json"}'
-          data: '{"name": `${{ github.event.head_commit.message }}`}'
+          data: '{"name": ${{env.COMMIT_MESSAGE}}}'
 
