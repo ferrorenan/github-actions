@@ -1,19 +1,19 @@
-name: Label Pull Request
+name: Merge Develop branch to Main
 on:
-  pull_request:
-    types: [ 'opened' ]
+  push:
+    branches:
+      - 'main'
 jobs:
-  label_pull_request:
+  merge-develop-to-main:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
     steps:
-      - uses: actions/github-script@v6
+      - name: Deploy Stage
+        uses: fjogeleit/http-request-action@v1
         with:
-          script: |
-            github.rest.pullRequest.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ["triage"]
-            })
+          url: 'https://62b10aaee460b79df050eac3.mockapi.io/dashboard/user'
+          method: 'POST'
+          username: ${{ secrets.AWX_USER }}
+          password: ${{ secrets.AWX_PASSWORD }}
+          customHeaders: '{"Content-Type": "application/json"}'
+          data: '{"name": "git-actions"}'
+
