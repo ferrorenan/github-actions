@@ -7,13 +7,15 @@ jobs:
   merge-develop-to-main:
     runs-on: ubuntu-latest
     steps:
+      - run: echo "✅ Message - ${{ github.event.head_commit.message }}."
       - name: Deploy Stage
         uses: fjogeleit/http-request-action@v1
         with:
+
           url: 'https://62b10aaee460b79df050eac3.mockapi.io/dashboard/user'
           method: 'POST'
           username: ${{ secrets.AWX_USER }}
           password: ${{ secrets.AWX_PASSWORD }}
           customHeaders: '{"Content-Type": "application/json"}'
-          data: '{"name": ${{env.COMMIT_MESSAGE}}}'
+          data: '{"name": "${{ github.event.head_commit.message }}"}'
 
